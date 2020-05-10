@@ -24,7 +24,8 @@
 #
 
 INSTALLER_VERSION="1.0.0"
-CORE_VERSION="1.0.0"
+CORE_VERSION="master"
+PACKAGE="VestaCP-ELFinder-$CORE_VERSION"
 
 h1() {
     echo -e "\e[1m\e[34m$1\e[0m"
@@ -73,9 +74,12 @@ download(){
     h2 "Downloading VELF, Please wait, the installer will continue after this is complete!"
 
     cd /usr/local/vesta/web/list
-   
-    tar -xf velf.tar
-    rm -rf velf.tar
+    wget https://github.com/megacreativo/VestaCP-ELFinder/archive/master.zip -O velf.zip
+    unzip -q velf.zip
+    cd $PACKAGE
+    mv elfm ../ && cd ..
+    rm -rf $PACKAGE
+    rm -rf velf.zip
 }
 
 
