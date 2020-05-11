@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Official Cloud Panel Automated Installation Script
+# Official VestaCP El Finder - File Manager Installation Script
 # =============================================
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ isRoot(){
 #--- Display the 'welcome' splash/user warning info..
 welcome(){
     clear
-    echo -e ""
+    echo ""
     h1 ""
     h1 "    __     _______ _     _____  "
     h1 "    \ \   / / ____| |   |  ___| "
@@ -67,14 +67,14 @@ welcome(){
     echo "File Manager for VestaCP"
     echo ""
     echo "Copyright © 2020. Powered By Mega Creativo <http://megacreativo.com>"
-    echo -e ""
+    echo ""
 }
 
 download(){
     h2 "Downloading VELF, Please wait, the installer will continue after this is complete!"
 
     cd /usr/local/vesta/web/list
-    wget https://github.com/megacreativo/VestaCP-ELFinder/archive/master.zip -O velf.zip
+    wget -q https://github.com/megacreativo/VestaCP-ELFinder/archive/master.zip -O velf.zip
     unzip -q velf.zip
     cd $PACKAGE
     mv elfm ../ && cd ..
@@ -93,17 +93,20 @@ install(){
     if grep -q "velf" /usr/local/vesta/web/templates/admin/panel.html; then
         success "VestaCP El Finder it already exists"
     else 
-        sed -i '/<div class="l-menu clearfix noselect">/a <div class="l-menu__item <?php if($TAB == "velf" ) echo "l-menu__item--active"; ?>"><a href="/list/velf/" target="_blank"><?=__("File Manager")?></a></div>' /usr/local/vesta/web/templates/admin/panel.html;
+        sed -i '/<div class="l-menu clearfix noselect">/a <div class="l-menu__item <?php if($TAB == "velf" ) echo "l-menu__item--active"; ?>"><a href="/list/velf/" target="_blank"><?=__("Finder")?></a></div>' /usr/local/vesta/web/templates/admin/panel.html;
     fi
 
     success "VestaCP El Finder is Active"
 }
 
-septup(){
+setup(){
     isRoot
     welcome
-    download
-    install
+    read -p "You want to install VestaCP El Finder? [y:Yes/n:No]: (y)" PROCESS
+    if [[ "$PROCESS" = "y" ]]; then
+        download
+        install
+    fi
 }
 
-septup
+setup
