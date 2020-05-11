@@ -1,101 +1,73 @@
-<?php 
-error_reporting(NULL);
-$TAB = 'elfm';
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+		<title>Finder</title>
 
-// Main include
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
-if ($_SESSION['user'] != 'admin') {
-    echo '<html>
-	<head><title>You dont have Access only admin can use it.</title>
-	<meta http-equiv="refresh" content="0; url=/list/user/" />
+		<!-- Require JS (REQUIRED) -->
+		<!-- Rename "main.default.js" to "main.js" and edit it if you need configure elFInder options or any things -->
+		<script data-main="./main.default.js" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+		<script>
+			define('elFinderConfig', {
+				// elFinder options (REQUIRED)
+				// Documentation for client options:
+				// https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
+				defaultOpts : {
+					url : 'php/connector.minimal.php', // or connector.maximal.php : connector URL (REQUIRED)
+					commandsOptions : {
+						edit : {
+							extraOptions : {
+								// set API key to enable Creative Cloud image editor
+								// see https://console.adobe.io/
+								creativeCloudApiKey : '',
+								// browsing manager URL for CKEditor, TinyMCE
+								// uses self location with the empty value
+								managerUrl : ''
+							}
+						},
+						quicklook : {
+							// to enable CAD-Files and 3D-Models preview with sharecad.org
+							sharecadMimes : ['image/vnd.dwg', 'image/vnd.dxf', 'model/vnd.dwf', 'application/vnd.hp-hpgl', 'application/plt', 'application/step', 'model/iges', 'application/vnd.ms-pki.stl', 'application/sat', 'image/cgm', 'application/x-msmetafile'],
+							// to enable preview with Google Docs Viewer
+							googleDocsMimes : ['application/pdf', 'image/tiff', 'application/vnd.ms-office', 'application/msword', 'application/vnd.ms-word', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/postscript', 'application/rtf'],
+							// to enable preview with Microsoft Office Online Viewer
+							// these MIME types override "googleDocsMimes"
+							officeOnlineMimes : ['application/vnd.ms-office', 'application/msword', 'application/vnd.ms-word', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.presentation']
+						}
+					},
+					// bootCalback calls at before elFinder boot up 
+					bootCallback : function(fm, extraObj) {
+						/* any bind functions etc. */
+						fm.bind('init', function() {
+							// any your code
+						});
+						// for example set document.title dynamically.
+						var title = document.title;
+						fm.bind('open', function() {
+							var path = '',
+								cwd  = fm.cwd();
+							if (cwd) {
+								path = fm.path(cwd.hash) || null;
+							}
+							document.title = path? path + ':' + title : title;
+						}).bind('destroy', function() {
+							document.title = title;
+						});
+					}
+				},
+				managers : {
+					// 'DOM Element ID': { /* elFinder options of this DOM Element */ }
+					'elfinder': {}
+				}
+			});
+		</script>
 	</head>
-	<body><h1> you dont have access... Only admin can use it.</h1></body></html>';
-    exit;
-}
+	<body>
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+		<!-- Element where elFinder will be created (REQUIRED) -->
+		<div id="elfinder"></div>
 
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>elFinder</title>
-	<!--
-	<script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
-	-->
-	<link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.13.custom.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="css/elfinder.css" type="text/css" media="screen" title="no title" charset="utf-8">
-
-	<script src="js/jquery-1.6.1.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/jquery-ui-1.8.13.custom.min.js" type="text/javascript" charset="utf-8"></script>
-
-	<script src="js/elfinder.min.js" type="text/javascript" charset="utf-8"></script>
-	<!--
-	<script src="js/i18n/elfinder.ru.js" type="text/javascript" charset="utf-8"></script>
-	-->
-
-	<style type="text/css">
-		#close, #open, #dock, #undock {
-			width: 100px;
-			position:relative;
-			display: -moz-inline-stack;
-			display: inline-block;
-			vertical-align: top;
-			zoom: 1;
-			*display: inline;
-			margin:0 3px 3px 0;
-			padding:1px 0;
-			text-align:center;
-			border:1px solid #ccc;
-			background-color:#eee;
-			margin:1em .5em;
-			padding:.3em .7em;
-			border-radius:5px; 
-			-moz-border-radius:5px; 
-			-webkit-border-radius:5px;
-			cursor:pointer;
-		}
-	</style>
-	
-
-	<script type="text/javascript" charset="utf-8">
-		$().ready(function() {
-			
-			var f = $('#finder').elfinder({
-				url : 'connectors/php/connector.php',
-				lang : 'en',
-				docked : true
-
-				// dialog : {
-				// 	title : 'File manager',
-				// 	height : 500
-				// }
-
-				// Callback example
-				//editorCallback : function(url) {
-				//	if (window.console && window.console.log) {
-				//		window.console.log(url);
-				//	} else {
-				//		alert(url);
-				//	}
-				//},
-				//closeOnEditorCallback : true
-			})
-			// window.console.log(f)
-			$('#close,#open,#dock,#undock').click(function() {
-				$('#finder').elfinder($(this).attr('id'));
-			})
-			
-		})
-	</script>
-
-</head>
-<body>
-	<div id="open">open</div><div id="close">close</div><div id="dock">dock</div><div id="undock">undock</div>
-	<div id="finder">finder</div>
-
-	
-
-</body>
+	</body>
 </html>
