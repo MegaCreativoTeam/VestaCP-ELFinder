@@ -80,18 +80,23 @@ download(){
     mv elfm ../ && cd ..
     rm -rf $PACKAGE
     rm -rf velf.zip
+
+    success "Downloaded VELF"
 }
 
 
 # Add the link to the panel.html file 
 install(){
-    if grep -q 'velf' /usr/local/vesta/web/templates/admin/panel.html; then
-        echo 'Already there.'
+
+    h2 "Installing VELF"
+
+    if grep -q "velf" /usr/local/vesta/web/templates/admin/panel.html; then
+        success "VestaCP El Finder it already exists"
     else 
         sed -i '/<div class="l-menu clearfix noselect">/a <div class="l-menu__item <?php if($TAB == "velf" ) echo "l-menu__item--active"; ?>"><a href="/list/velf/" target="_blank"><?=__("File Manager")?></a></div>' /usr/local/vesta/web/templates/admin/panel.html;
     fi
 
-    echo 'VestaCP El Finder is Active';
+    success "VestaCP El Finder is Active"
 }
 
 septup(){
