@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+<?php 
+include_once $_SERVER['DOCUMENT_ROOT']."/inc/main.php";
+$useri = posix_getpwuid(posix_getuid())['name'];
+$user 	  	= $_SESSION['user'];
+?><!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-		<title>Finder</title>
+		<title><?=$useri?> - Finder</title>
 
 		<!-- Require JS (REQUIRED) -->
 		<!-- Rename "main.default.js" to "main.js" and edit it if you need configure elFInder options or any things -->

@@ -77,7 +77,7 @@ download(){
     wget -q https://github.com/megacreativo/VestaCP-ELFinder/archive/master.zip -O velf.zip
     unzip -q velf.zip
     cd $PACKAGE
-    mv elfm ../ && cd ..
+    mv velf ../ && cd ..
     rm -rf $PACKAGE
     rm -rf velf.zip
 

@@ -15,7 +15,7 @@ VestaCP El Finder - File Manager for VestaCP
 Its automatic plugin install in VestaCP.
 
 ```sh
-wget 'https://raw.githubusercontent.com/megacreativo/VestaCP-ELFinder/master/install.sh' && sh install.sh
+wget 'https://raw.githubusercontent.com/megacreativo/VestaCP-ELFinder/master/velf-install.sh' && sh velf-install.sh
 ```
 
 ## 🚀 Usage
